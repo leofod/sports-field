@@ -1,0 +1,251 @@
+.playground-container {
+    min-width: 700px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    background-color: #52756F;
+    border: 1px solid #52756F;
+    border-radius: 5px;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+}
+
+.playground-container p{
+    margin: 10px 0 0 0;
+}
+
+.playground-container a{
+  color: #000;
+}
+.playground-container h2{
+    margin: 0;
+}
+
+.playground-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.playground-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.favor{
+    width: 100%;
+}
+
+.favor input[type=submit]{
+  align-items: center;
+  background-color: #eff458;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  margin-left: 20px;
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.favor input[type=submit]:hover,
+.favor input[type=submit]:focus {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.favor input[type=submit]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 1px #000,
+  0 0 5px #000,
+  0 0 10px #000,
+  0 0 20px #000;
+}
+
+.favor input[type=submit]:active {
+  background-color: #F0F0F1;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  color: rgba(0, 0, 0, 0.65);
+  transform: translateY(0);
+}
+
+.members-field{
+  background-color: #52756F;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  margin: 10px 0 0 20px;
+  padding: 5px 10px;
+}
+
+.members-field h4{
+  margin: 0;
+}
+
+.show-members{
+  margin-bottom: 7px;
+  border: 0px solid rgba(0, 0, 0, 0.1);
+  text-decoration: underline;
+  background-color: #52756F;
+  text-align: left;
+  padding-left: 0;
+}
+
+.show-members:hover{
+  cursor: pointer;
+}
+
+.members-field a{
+  color: #000;
+  margin-right: 5px;
+}
+
+#notif-sign-in{
+  margin: 10px 0 10px 20px;
+  font-size: 20px;
+}
+
+.signUp-b{
+  margin-top: 5px;
+  width: 60px;
+	height: 25px;
+	border-radius: 2px;
+  color: black;
+  text-align: center;
+}
+
+.signUp-b-in{
+  background-color: #059e30;
+}
+
+.signUp-b-out{
+  background-color: #bc4626;
+}
+
+
+.signUp-b:hover{
+  background: #fff;
+  color: #000;
+  border-radius: 5px;
+  box-shadow: 0 0 1px #000,
+              0 0 5px #000,
+              0 0 10px #000,
+              0 0 20px #000;
+}
+
+#rating-area{
+  margin: 10px 20px;
+  padding: 0;
+  width: 250px;
+}
+
+#add-raiting:not(:checked) > input[type=radio] {
+	display: none;
+}
+
+#add-raiting input[type=submit] {
+	width: 130px;
+	height: 36px;
+	margin: 10px 60px;
+  background-color: #52756F;
+	border-radius: 2px;
+  color: black;
+  text-align: center;
+	padding: 10px;
+  font-size: 16px;
+}
+
+#add-raiting input[type=submit]:hover {
+    font-size: 12px;
+    box-shadow: 0 0 1px #000,
+    0 0 5px #000,
+    0 0 10px #000,
+    0 0 20px #000;
+}
+
+#add-raiting:not(:checked) > label {
+  margin-right: 5px;
+	float: right;
+	width: 42px;
+	padding: 0;
+	cursor: pointer;
+	font-size: 32px;
+	line-height: 32px;
+	color: lightgrey;
+	text-shadow: 1px 1px #bbb;
+}
+
+#add-raiting:not(:checked) > label:before {
+	content: '★';
+}
+
+#add-raiting > input:checked ~ label {
+	color: gold;
+	text-shadow: 1px 1px #c60;
+}
+
+#add-raiting:not(:checked) > label:hover,
+#add-raiting:not(:checked) > label:hover ~ label {
+	color: gold;
+}
+
+#add-raiting > input:checked + label:hover,
+#add-raiting > input:checked + label:hover ~ label,
+#add-raiting > input:checked ~ label:hover,
+#add-raiting > input:checked ~ label:hover ~ label,
+#add-raiting > label:hover ~ input:checked ~ label {
+	color: gold;
+	text-shadow: 1px 1px goldenrod;
+}
+
+.rate-area > label:active {
+	position: relative;
+}
+
+#rating-result {
+	width: 220px;
+	height: 60px;
+	margin: 10px 0 10px 20px;
+}
+
+#rating-result p{
+	margin: 2px auto;
+	padding-left: 30px;
+}
+
+#rating-result span {
+	padding: 0;
+	font-size: 32px;
+	margin: 0 6px;
+	line-height: 1;
+	color: lightgrey;
+	text-shadow: 1px 1px #bbb;
+}
+
+#rating-result > span:before {
+	content: '★';
+}
+
+#rating-result > span.active {
+	color: gold;
+	text-shadow: 1px 1px #c60;
+}

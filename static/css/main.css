@@ -1,0 +1,58 @@
+ body {
+    padding: 0;
+    margin: 0;
+    font-family: 'segoe ui';
+    min-height: 100vh;
+    background-color: #70ABBF;
+}
+
+#page-container{
+    width: 1400px;
+    margin: 0 auto;
+    background-color: #327496;
+    min-height: calc(100vh - 150px);
+    padding: 40px 20px;
+}
+
+.navbar {
+    min-width: 1400px;
+    padding: 0 20px;
+    background-color: #C4BEB5;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar-logo img{
+    width: 70px;
+    height: 70px;
+}
+
+.navbar-center {
+    display: flex;
+}
+
+.navbar-link {
+    padding: 25px 20px;
+    font-size: 20px;
+    color: #333;
+    text-decoration: none;
+}
+
+.navbar-right {
+    display: flex;
+}
+
+.navbar-container {
+    padding-top: 25px;
+    margin: 0 5px;
+}
+
+.navbar-container:hover {
+    background-color: aliceblue;
+    cursor: pointer;
+}
+
+
+
+

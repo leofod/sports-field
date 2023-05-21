@@ -1,0 +1,38 @@
+.playground-container {
+    min-width: 700px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+}
+
+.playground-container a{
+    margin-top: 5px;
+    color: #000;
+}
+
+.playground-container p{
+    margin: 10px 0 0 0;
+    max-width: 500px;
+}
+
+.playground-container h2{
+    margin: 0;
+}
+
+.playground-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.playground-info {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,39 @@
+.user-container {
+    min-width: 700px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #69516B;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 40px;
+}
+
+.user-container h2{
+    margin: 0 0 15px 0;
+}
+
+.user-container p{
+    margin: 5px 0;
+    max-width: 500px;
+}
+
+.user-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.url-a{
+    color: #000;
+    font-size: 16px;
+    text-transform: uppercase;
+}
