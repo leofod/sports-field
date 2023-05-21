@@ -7,7 +7,7 @@ from configparser import ConfigParser
 # Отпрака письма.
 def send_email(receiver, verification_code):
     base_path = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(base_path, "email.ini")        
+    config_path = os.path.join(base_path, "mail.ini")        
 
     if os.path.exists(config_path):
         config = ConfigParser()
