@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Добавить площадку</title>
+    <link href="{% static 'css/form.css' %}" rel="stylesheet">
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+
+{% block page_content %}
+    {% if form %}
+        <div class="form-box">
+            <h2>Добавить площадку</h2>
+            {% if error %}
+                <div class="notice-box" id="notice-add-playground">
+                    {% if error == 1 or error == 4%}
+                        Выберите вид спорта
+                    {% elif error == 2 %}
+                        Заполните поле "Адрес или ссылка"
+                    {% else %}
+                        Выберите тип площадки
+                    {% endif %}
+                </div>
+            {% endif %}
+            <form id="add-playground-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-box">
+                    <div class="input-check-label">
+                        {{form.sport.label}}
+                    </div>
+                    {% for s in sport%}
+                            <input type="radio" class="inpt" name="{{form.sport.html_name}}" value="{{s.id}}" ><text class="radio-text">{{s.name}}</text>
+                    {% endfor %}
+                </div>
+                <div class="input-box">
+                    <input type="{{form.name.widget_type}}" name="{{form.name.html_name}}" placeholder="{{form.name.label}}" >
+                    <label>{{form.name.label}}</label>
+                </div>
+                <div class="input-box">
+                    <input type="{{form.address.widget_type}}" name="{{form.address.html_name}}" placeholder="{{form.address.label}}" >
+                    <label>{{form.address.label}}</label>
+                </div>
+                <div class="input-box">
+                    <input type="file" accept="image/*" name="{{form.photo.html_name}}" placeholder="{{form.photo.label}}">
+                    <label>{{form.photo.label}}</label>
+                </div>
+                <div class="input-box">
+                    <div class="input-check-label">
+                        {{form.price.label}}
+                    </div>
+                    <input type="radio"  name="{{form.price.html_name}}" value="0" ><text class="radio-text">бесплатная</text>
+                    <input type="radio"  name="{{form.price.html_name}}" value="1" ><text class="radio-text">платная</text>
+                </div>
+                <div class="input-box">
+                    <input type="{{form.field_info.widget_type}}" name="{{form.field_info.html_name}}" placeholder="{{form.field_info.label}}" >
+                    <label>{{form.field_info.label}}</label>
+                </div>
+            <input type="submit" class="submit_form" value="Добавить">
+            </form>
+        </div>
+    {% else %}
+        <b>Вы больше не можете добавлять площадки сегодня!</b>
+    {% endif%}
+{% endblock page_content %}

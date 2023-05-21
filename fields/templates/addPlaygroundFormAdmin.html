@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Добавить площадку</title>
+    <link href="{% static 'css/form.css' %}" rel="stylesheet">
+    {% if playground %}
+        <link href="{% static 'css/added.css' %}" rel="stylesheet">
+    {% endif %}
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+
+{% block page_content %}
+    {% if playground %}
+        <div class="playground-container">
+            <div class="playground-photo">
+                {% if playground.photo %}
+                    <img src="{{playground.photo.url}}" alt="Поле">
+                {% else %}
+                    <img src="{% static 'img/3.jpg' %}" alt = "Нет фотографии">
+                {% endif %}
+            </div>
+            <div class="playground-info">
+                <h2>{{playground.name}}</h2>
+                {% if playground.price == True %}
+                    <p><i>Это платная площадка</i></p>
+                {% else %}
+                    <p><i>Это бесплатная площадка</i></p>
+                {% endif %}
+                <p>Адрес: {{playground.address}}</p>
+                <p>Вид спорта: {{playground.sport.name}}</p>
+                <p>Информация о площадке: {{playground.field_info}}</p>
+            </div>
+        </div>
+    {% endif %}
+    <div class="form-box">
+        <h2>Добавить площадку</h2>
+        {% if error %}
+            <div class="notice-box" id="notice-add-playground">
+                Фото, если что, потерялось.<br>
+                {% if error == 1 %}
+                    Введите название
+                {% elif error == 2 %}
+                    Введите URL
+                {% elif error == 3 %}
+                    URL занят. Введите новый
+                {% elif error == 4 %}
+                    Введите адрес
+                {% elif error == 5 %}
+                    Выберите тип площадки
+                {% elif error == 6 %}
+                    Введите ссылку
+                {% elif error == 7 %}
+                    Введите широту
+                {% elif error == 8 %}
+                    Введите долготу
+                {% else %}
+                    Выберите вид спорта
+                {% endif %}
+            </div>
+        {% endif %}
+        <form id="add-playground" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-box">
+                <div class="input-check-label">
+                    {{form.sport.label}}
+                </div>
+                {% for s in sport%}
+                        <input type="radio" class="inpt" name="{{form.sport.html_name}}" value="{{s.id}}" 
+                        {% if form.sport.data == s.id %} checked {% endif %}><text class="radio-text">{{s.name}}</text>
+                {% endfor %}
+            </div>
+            <div class="input-box">
+                <input type="{{form.name.widget_type}}" name="{{form.name.html_name}}" placeholder="{{form.name.label}}" 
+                {% if error != 1 and form.name.data|length != 0 %} value="{{form.name.data}}" {% endif %}>
+                <label>{{form.name.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="{{form.url_name.widget_type}}" name="{{form.url_name.html_name}}" placeholder="{{form.url_name.label}}" 
+                {% if error != 2 and error != 2 and form.url_name.data|length != 0 %} value="{{form.url_name.data}}" {% endif %}>
+                <label>{{form.url_name.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="{{form.address.widget_type}}" name="{{form.address.html_name}}" placeholder="{{form.address.label}}" 
+                {% if error != 4 and form.address.data|length != 0 %} value="{{form.address.data}}" {% endif %}>
+                <label>{{form.address.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="file" accept="image/*" name="{{form.photo.html_name}}" placeholder="{{form.photo.label}}">
+                <label>{{form.photo.label}}</label>
+            </div>
+            <div class="input-box">
+                <div class="input-check-label">
+                    {{form.price.label}}
+                </div>
+                <input type="radio"  name="{{form.price.html_name}}" value="0" checked><text class="radio-text">бесплатная</text>
+                <input type="radio"  name="{{form.price.html_name}}" value="1" {% if form.price.data == '1' %} checked {% endif %}><text class="radio-text">платная</text>
+            </div>
+            <div class="input-box">
+                <input type="{{form.link.widget_type}}" name="{{form.link.html_name}}" placeholder="{{form.link.label}}" 
+                {% if error != 6 and form.link.data|length != 0 %} value="{{form.link.data}}" {% endif %}>
+                <label>{{form.link.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="{{form.field_info.widget_type}}" name="{{form.field_info.html_name}}" placeholder="{{form.field_info.label}}" >
+                <label>{{form.field_info.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="text" name="{{form.lat.html_name}}" placeholder="{{form.lat.label}}"
+                {% if error != 7 and form.lat.data|length != 0 %} value="{{form.lat.data}}" {% endif %}>
+                <label>{{form.lat.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="text" name="{{form.lng.html_name}}" placeholder="{{form.lng.label}}"
+                {% if error != 8 and form.lng.data|length != 0 %} value="{{form.lng.data}}" {% endif %}>
+                <label>{{form.lng.label}}</label>
+            </div>
+
+        <input type="submit" class="submit_form" value="Добавить">
+        </form>
+    </div>
+{% endblock page_content %}

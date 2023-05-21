@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head_content %}{% endblock %}
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <a href="/"><img src="{% static 'img/logo.png' %}" alt="логотип"></a>
+        </div>
+        <div class="navbar-center">
+            <div class="navbar-container">
+                <a href="/f/show/" class="navbar-link">Площадки</a>
+            </div>
+            <div class="navbar-container">
+                <a href="/f/map/" class="navbar-link">Карта</a>
+            </div>
+            <div class="navbar-container">
+                <a href="/f/add/" class="navbar-link">Добавить площадку</a>
+            </div>
+        </div>
+        <div class="navbar-right">
+            {% block nav_content %}
+            {% endblock %}       
+        </div>
+    </nav>
+    <div id="page-container">                
+        {% block page_content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

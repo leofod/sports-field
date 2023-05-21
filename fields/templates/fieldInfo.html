@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    {% if fld%}
+        <title>{{fld.name}}</title>
+    {% else %}
+        <title>Нет площадки</title>
+    {% endif %}
+    <link href="{% static 'css/showfield.css' %}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'js/finfo.js' %}" type="text/javascript"></script>
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+{% block page_content %}
+    {% if fld %}
+        <div class="playground-container">
+            <div class="playground-photo">
+                {% if fld.photo %}
+                    <img src="{{fld.photo.url}}" alt="{{fld.name}}">
+                {% else %}
+                    {% if fld.sport.id == 1 %}
+                        <img src="{% static 'img/football.jpg' %}" alt = "Нет фотографии">
+                    {% elif fld.sport.id == 2 %}
+                        <img src="{% static 'img/volleyball.jpg' %}" alt = "Нет фотографии">
+                    {% else %}
+                        <img src="{% static 'img/basketball.jpg' %}" alt = "Нет фотографии">
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="playground-info">
+                <h2>{{fld.name}}</h2>
+                <p>Адрес: {{fld.address}}</p>
+                {% if fld.price == True %}
+                    <p><i>Это платная площадка</i></p>
+                {% else %}
+                    <p><i>Это бесплатная площадка</i></p>
+                {% endif %}
+                <p><a href="{{fld.link}}" class="alert-link">Ссылка на карты</a></p>
+                <p>Информация о площадке: {{fld.field_info}}</p>
+            </div>
+        </div>
+    {% else %}
+        Нет такой площадки
+    {% endif %}
+
+    {% if favor%}
+        <div class="favor">
+            <form id="favor" method="post">  
+                {% csrf_token %}    
+                <input type="hidden" name="{{favor.check.html_name}}" value="True">
+                {% if favor_flag %}
+                    <input id="favor-b" type="submit" value="Из избранного">
+                {% else %}
+                    <input id="favor-b" type="submit" value="В избранное">
+                {% endif %}
+            </form>             
+        </div>  
+    {% endif %}
+
+
+    {% if arrd %}
+        {% if star %}
+            <div id="rating-area">
+                <form id="add-raiting" method="post">  
+                    {% csrf_token %}        
+                    <input type="radio" id="star-5" name="{{star.mark.html_name}}" value="5">
+                    <label for="star-5" title="Оценка «5»"></label>	
+                    <input type="radio" id="star-4" name="{{star.mark.html_name}}" value="4">
+                    <label for="star-4" title="Оценка «4»"></label>    
+                    <input type="radio" id="star-3" name="{{star.mark.html_name}}" value="3">
+                    <label for="star-3" title="Оценка «3»"></label>  
+                    <input type="radio" id="star-2" name="{{star.mark.html_name}}" value="2">
+                    <label for="star-2" title="Оценка «2»"></label>    
+                    <input type="radio" id="star-1" name="{{star.mark.html_name}}" value="1">
+                    <label for="star-1" title="Оценка «1»"></label>
+                    <input type="submit" value="Оценить">
+                </form>
+            </div>
+        {% endif %}
+        {% if ex_star %}
+            <div id="rating-result">
+                <p>Ваша текущая оценка:</p>
+            {% if ex_star == 1 %} 
+                    <span class="active"></span>	
+                    <span></span>    
+                    <span></span>    
+                    <span></span>    
+                    <span></span>
+            {% elif ex_star == 2 %} 
+                    <span class="active"></span>	
+                    <span class="active"></span>    
+                    <span></span>    
+                    <span></span>    
+                    <span></span>
+            {% elif ex_star == 3 %} 
+                    <span class="active"></span>	
+                    <span class="active"></span>    
+                    <span class="active"></span>  
+                    <span></span>    
+                    <span></span>
+            {% elif ex_star == 4 %} 
+                    <span class="active"></span>	
+                    <span class="active"></span>    
+                    <span class="active"></span>  
+                    <span class="active"></span>  
+                    <span></span>
+            {% else %}
+                    <span class="active"></span>	
+                    <span class="active"></span>    
+                    <span class="active"></span>  
+                    <span class="active"></span>  
+                    <span class="active"></span>  
+            {% endif%}
+            </div>
+        {% else%}
+            <div id="rating-result" style="display:none;">
+            </div>
+        {% endif %}
+        <div id="notif-sign-in" style="display: none;"></div>
+        {% for d in arrd%}
+            <div class = "members-field">
+                <h4>{{d|date:"d.m.Y, D"}}</h4>
+                {% if members %}
+                    <button class="show-members" onclick="showMembers('{{d|date:"Y-m-d"}}')" id="show-members-{{d|date:"Y-m-d"}}">показать участников</button>
+                    <div class="members-list" id="members-list-{{d|date:"Y-m-d"}}" style="display:none">
+                    {% for m in members %}
+                        {% if m.0 == d|date:"Y-m-d"%}
+                            <a href="/user/{{m.2}}">{{m.1}}</a>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <form class="signUp" id="signUp-{{d|date:"Y-m-d"}}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="{{form.date_meet.auto_id}}" name="{{form.date_meet.html_name}}" value="{{d|date:"Y-m-d"}}">
+                    {% if d|date:"Y-m-d" in current%}
+                        <input class="signUp-b signUp-b-out" id="signUp-b-{{d|date:"Y-m-d"}}" type="submit" value="Не буду">
+                    {% else %}
+                        <input class="signUp-b signUp-b-in" id="signUp-b-{{d|date:"Y-m-d"}}" type="submit" value="Буду">
+                    {% endif %}
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        {% if fld %}
+            <p>Войдите, чтобы увидеть больше информации</p>
+        {% endif %}
+    {% endif %}
+{% endblock page_content %}

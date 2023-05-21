@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Добавленные площадки</title>
+    <link href="{% static 'css/added.css' %}" rel="stylesheet">
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+
+{% block page_content %}
+    {% if playground %}
+        {% for p in playground %}
+            <div class="playground-container">
+                <div class="playground-photo">
+                    {% if p.photo %}
+                        <img src="{{p.photo.url}}" alt="Поле">
+                    {% else %}
+                        <img src="{% static 'img/3.jpg' %}" alt = "Нет фотографии">
+                    {% endif %}
+                </div>
+                <div class="playground-info">
+                    <h2>{{p.name}}</h2>
+                    {% if p.price == True %}
+                        <p><i>Это платная площадка</i></p>
+                    {% else %}
+                        <p><i>Это бесплатная площадка</i></p>
+                    {% endif %}
+                    <p>Адрес: {{p.address}}</p>
+                    <p>Вид спорта: {{p.sport.name}}</p>
+                    <p>Информация о площадке: {{p.field_info}}</p>
+                    <a href="{% url 'addPlaygroundFormAdmin'%}{{p.id}}">Форма добавления</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        Нет площадок
+    {% endif %}
+{% endblock %}

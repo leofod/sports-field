@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Площадки</title>
+    <link href="{% static 'css/form.css' %}" rel="stylesheet">
+    <link href="{% static 'css/fields.css' %}" rel="stylesheet">
+    {% if url_under %}
+        <script>
+            history.replaceState("", "", "/f/show/{{url_sport}}/{{url_price}}/{{url_under}}");  
+        </script>
+    {% endif %}
+    {% if url_change %}
+        <script>
+            history.replaceState("", "", "/f/show/");  
+        </script>
+    {% endif %}
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+{% block page_content %}
+    <div class="form-box">
+        <h2>Найти площадки</h2>
+        <div class="notice-box">
+            {% if error%}
+                {{error}}
+            {% endif %}
+        </div>
+        <form id="crit-playground" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-box">
+                <input name="{{form.group_id.html_name}}" placeholder="{{form.group_id.label}}" 
+                list="list_{{form.group_id.auto_id}}" {% if under %} value="{{under}}" {% endif %}>
+                <datalist id="list_{{form.group_id.auto_id}}">
+                {% for s in stations%}
+                    <option value="{{s.name}}">
+                {% endfor %}
+                </datalist>
+                <label>{{form.group_id.label}}</label>
+            </div>
+            <div class="input-box">
+                <div class="input-check-label">
+                    {{form.sport.label}}
+                </div>
+                {% for s in sport%}
+                        <input type="radio" name="{{form.sport.html_name}}" value="{{s.en_name}}"
+                        {% if choosen_sport == s.en_name or form.sport.data == s.en_name %} checked {% endif %}><text class="radio-text" >{{s.name}}</text>
+                {% endfor %}
+            </div>
+            <div class="input-box">
+                <div class="input-check-label">
+                    {{form.price.label}}
+                </div>
+                <input type="radio"  name="{{form.price.html_name}}" onmousedown="this.isChecked=this.checked;" onclick="this.checked=!this.isChecked"
+                value="0" {% if price == "free" or form.price.data == "0" %} checked {% endif %}><text class="radio-text">бесплатная</text>
+                <input type="radio"  name="{{form.price.html_name}}" onmousedown="this.isChecked=this.checked;" onclick="this.checked=!this.isChecked"
+                value="1" {% if price == "paid" or form.price.data == "1" %} checked {% endif %}><text class="radio-text">платная</text>
+            </div>
+        <input type="submit" class="submit_form" value="Найти">
+        </form>
+    </div>
+    {% if instance %}
+        <div class="fields-container">
+        {% for i in instance %}
+            <div class="field-container">
+                {% if i.photo%}
+                    <a href="/f/show/{{i.url_name}}"><img src="{{i.photo.url}}" alt="Фото 1" class="photo"></a>
+                {% else %}
+                    {% if i.sport.id == 1 %}
+                        <a href="/f/show/{{i.url_name}}"><img src="{% static 'img/football.jpg' %}" alt="{{i.sport.en_name}}" class="photo"></a>
+                    {% elif i.sport.id == 2 %}
+                        <a href="/f/show/{{i.url_name}}"><img src="{% static 'img/volleyball.jpg' %}" alt="{{i.sport.en_name}}" class="photo"></a>
+                    {% else %}
+                        <a href="/f/show/{{i.url_name}}"><img src="{% static 'img/basketball.jpg' %}" alt="{{i.sport.en_name}}" class="photo"></a>
+                    {% endif %}
+                {% endif %}
+                <div class="field-info">
+                    <h4>{{i.name}}</h4>
+                    {% if i.price == True %}
+                        <p><i>Платная площадка</i></p>
+                    {% else %}
+                        <p><i>Бесплатная площадка</i></p>
+                    {% endif %}
+                    <p>{{i.field_info}}</p>
+                </div>
+            </div>
+        {% endfor %}
+     </div>
+    {% endif %}
+{% endblock page_content %}
+
