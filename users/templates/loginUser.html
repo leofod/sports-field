@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Авторизация</title>
+    <link href="{% static 'css/form.css' %}" rel="stylesheet">
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}       
+{% block page_content %}
+<div class="form-box">
+    <h2>Авторизация</h2>
+    {% if error == True or error == False %}
+        <div class="notice-box">
+            {% if error == True %}
+                Нет учетной записи с такими почтой и паролем.
+            {% else %}
+                Невалидная почта или пароль.
+            {% endif %}
+        </div>
+    {% endif %}
+    <form id="check-login" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="input-box">
+                {% comment %} autocomplete="off" {% endcomment %}
+                <input type="{{field.widget_type}}" name="{{field.html_name}}" placeholder="{{field.label}}" 
+                {% if field.html_name == 'email' and error == True %} value = "{{field.data}}" {% endif %}>
+                <label>{{field.label}}</label>
+            </div>
+        {% endfor%}
+      <input type="submit" class="submit_form" value="Войти">
+    </form>
+    <p class="p-to-reg">Если нет учетной записи, <a href="/reg/" class="navbar-link">зарегистрируйтесь</a>.</p>
+  </div>
+
+{% endblock page_content %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Registration</title>
+    <link href="{% static 'css/form.css' %}" rel="stylesheet">
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+{% block page_content %}
+<div class="form-box">
+    <h2>Авторизация</h2>
+    {% if error %}
+        <div class="notice-box">
+            {% if error == 1 %}
+                Логин должен начинаться с буквы или цифры и содержать не менее 3-х символов.
+            {% elif error == 2 %}
+                Недоступный логин
+            {% elif error == 3 and form.name.data|length == 0%}
+                Введите имя
+            {% elif error == 3 and form.name.data|length != 0%}
+                Введите правильное имя
+            {% elif error == 4 and form.surname.data|length == 0%}
+                Введите фамилию
+            {% elif error == 4 and form.surname.data|length != 0%}
+                Введите правильную фамилию
+            {% elif error == 5 and form.email.data|length == 0%}
+                Введите почту
+            {% elif error == 5 and form.email.data|length != 0%}
+                Введите правильную почту
+            {% elif error == 6 %}
+                Пароль должен быть не менее 8-ми символов и содержать хотя бы одну цифру, заглавную и строчную латинскую буквы.
+            {% elif error == 7 %}
+                Пароли не совпадают
+            {% endif%}
+        </div>
+    {% endif %}
+    <form id="create_account" method="post">
+        {% csrf_token %}
+        <div class="input-box">
+            <input type="{{form.username.widget_type}}" name="{{form.username.html_name}}" placeholder="{{form.username.label}}" 
+            {% if error != 1 and error != 2 and form.username.data|length != 0 %} value="{{form.username.data}}" {% endif%}>
+            <label>{{form.username.label}}</label>
+        </div>
+        <div class="input-box">
+            <input type="{{form.name.widget_type}}" name="{{form.name.html_name}}" placeholder="{{form.name.label}}" 
+            {% if error != 3 and form.name.data|length != 0 %} value="{{form.name.data}}" {% endif %}>
+            <label>{{form.name.label}}</label>
+        </div>
+        <div class="input-box">
+            <input type="{{form.surname.widget_type}}" name="{{form.surname.html_name}}" placeholder="{{form.surname.label}}" 
+            {% if error != 4 and form.surname.data|length != 0 %} value="{{form.surname.data}}" {% endif %}>
+            <label>{{form.surname.label}}</label>
+        </div>
+        <div class="input-box">
+            <input type="{{form.email.widget_type}}" name="{{form.email.html_name}}" placeholder="{{form.email.label}}" 
+            {% if error != 5 and form.email.data|length != 0 %} value="{{form.email.data}}" {% endif %}>
+            <label>{{form.email.label}}</label>
+        </div>
+        <div class="input-box">
+            <input type="{{form.password.widget_type}}" name="{{form.password.html_name}}" placeholder="{{form.password.label}}" 
+            {% if form.password.data|length != 0 %} value="{{form.password.data}}" {% endif%}>
+            <label>{{form.password.label}}</label>
+        </div>
+        <div class="input-box">
+            <input type="{{form.password_repeat.widget_type}}" name="{{form.password_repeat.html_name}}" placeholder="{{form.password_repeat.label}}" 
+            {% if form.password_repeat.data|length != 0 %} value="{{form.password_repeat.data}}" {% endif%}>
+            <label>{{form.password_repeat.label}}</label>
+        </div>
+      <input type="submit" class="submit_form" value="Войти">
+    </form>
+  </div>
+{% endblock page_content %}

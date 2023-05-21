@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Fields</title>
+    <link href="{% static 'css/form.css' %}" rel="stylesheet">
+    <link href="{% static 'css/user.css' %}" rel="stylesheet">
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+
+{% block page_content %}
+    <div class="user-container">
+        <div class="user-photo">
+            {% if user_info.avatar%}
+                <a data-fancybox="gallery" href="{{user_info.avatar.url}}"><img src="{{user_info.avatar.url}}"></a>
+            {% else %}
+                <img src="{% static 'img/usr.jpg' %}" alt = "Нет фотографии">
+            {% endif %}
+        </div>
+        <div class="user-info">
+        <h2>{{user_info.name}} {{user_info.surname}}</h2>
+        <p>Логин: {{user_info.username}} </p>
+        {% if user_info.bday %}<p>Дата рождения: {{user_info.bday}}</p>{% endif %}
+        {% if user_info.person_info %}<p>Информация о себе: {{user_info.person_info}}</p>{% endif %}
+        </div>
+    </div>
+
+    <div class="form-box">
+        <h2>Изменить информацию о себе</h2>
+        {% if error %}
+            <div class="notice-box">
+                {% if error == 1 %}
+                    Логин должен начинаться с буквы или цифры и содержать не менее 3-х символов.
+                {% elif error == 2 %}
+                    Недоступный логин - {{form.username.data}}
+                {% elif error == 3 and form.name.data|length == 0%}
+                    Введите имя
+                {% elif error == 3 and form.name.data|length != 0%}
+                    Неправильное имя - {{form.name.data}}
+                {% elif error == 4 and form.surname.data|length == 0%}
+                    Введите фамилию
+                {% elif error == 4 and form.surname.data|length != 0%}
+                    Неправильная фамилия - {{form.surname.data}}
+                {% elif error == 5 %}
+                    Неправильная дата - {{form.bday.data}}
+                {% endif%}
+            </div>
+        {% endif %}
+        <form id="edit-me" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-box">
+                <input type="{{form.username.widget_type}}" name="{{form.username.html_name}}" placeholder="{{form.username.label}}" 
+                {% if error != 1 and error != 2 and form.username.data|length != 0 %} 
+                    value="{{form.username.data}}" 
+                {% else %}
+                    value="{{user_info.username}}"
+                {% endif%}>
+                <label>{{form.username.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="{{form.name.widget_type}}" name="{{form.name.html_name}}" placeholder="{{form.name.label}}" 
+                {% if error != 3 and form.name.data|length != 0 %} 
+                    value="{{form.name.data}}" 
+                {% else %}
+                    value="{{user_info.name}}"
+                {% endif%}>
+                <label>{{form.name.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="{{form.surname.widget_type}}" name="{{form.surname.html_name}}" placeholder="{{form.surname.label}}" 
+                {% if error != 4 and form.surname.data|length != 0 %} 
+                    value="{{form.surname.data}}" 
+                {% else %}
+                    value="{{user_info.surname}}"
+                {% endif%}>
+                <label>{{form.surname.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="{{form.bday.widget_type}}" name="{{form.bday.html_name}}" placeholder="{{form.bday.label}}" 
+                {% if user_info.bday%}
+                    value="{{user_info.bday|date:'Y-m-d'}}"
+                {% endif %}>
+                <label>{{form.bday.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="{{form.person_info.widget_type}}" name="{{form.person_info.html_name}}" placeholder="{{form.person_info.label}}" 
+                {% if user_info.person_info %}value="{{user_info.person_info}}" {% endif %}>
+                <label>{{form.person_info.label}}</label>
+            </div>
+            <div class="input-box">
+                <input type="file" accept="image/*" name="{{form.avatar.html_name}}" value="" placeholder="{{form.avatar.label}}">
+                <label>{{form.avatar.label}}</label>
+            </div>
+
+          <input type="submit" class="submit_form" value="Изменить">
+        </form>
+    </div>
+{% endblock page_content %}
+
+

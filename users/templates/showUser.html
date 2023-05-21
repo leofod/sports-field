@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    {% if title%}
+        <title>{{title}}</title>
+    {% else %}
+        <title>Пользователь не найден</title>
+    {% endif %}
+    <link href="{% static 'css/fields.css' %}" rel="stylesheet">
+    <link href="{% static 'css/user.css' %}" rel="stylesheet">
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+
+{% block page_content %}
+    {% if error_user%}
+        Пользователь {{title}} не найден.
+    {% else%}
+        <div class="user-container">
+            <div class="user-photo">
+                {% if user_info.avatar%}
+                    <a data-fancybox="gallery" href="{{user_info.avatar.url}}"><img src="{{user_info.avatar.url}}"></a>
+                {% else %}
+                    <img src="{% static 'img/usr.jpg' %}" alt = "Нет фотографии">
+                {% endif %}
+            </div>
+            <div class="user-info">
+            <h2>{{user_info.name}} {{user_info.surname}}</h2>
+            {% if guest != True %}
+                <p>Логин: {{user_info.username}} </p>
+                {% if user_info.bday %}<p>Дата рождения: {{user_info.bday}}</p>{% endif %}
+            {% endif %}
+            {% if user_info.person_info %}<p>Информация о пользователе: {{user_info.person_info}}</p>{% endif %}
+            </div>
+        </div>
+        {% if guest %}
+            <p><a class="url-a" href="{% url 'login'%}">Войдите</a>, чтобы увидеть больше информации о данном пользователе.</p>
+        {% else %}
+            {% if me %}
+                <p><a class="url-a" href="{% url 'edit'%}" class="a-black">Изменить информацию о себе</a></p>
+            {% endif %}            
+            {% if meetings_date %}
+                {% for d in meetings_date %}
+                  <div class="fields-container">
+                        <h2>{{d}}</h2>
+                    {% for m in meetings %}
+                        {% if d == m.date_meet %}
+                            <div class="field-container">
+                                {% if m.playground.photo%}
+                                    <a href="/f/show/{{m.playground.url_name}}"><img src="{{m.playground.photo.url}}" alt="Фото 1" class="photo"></a>
+                                {% else %}
+                                    {% if m.playground.sport.id == 1 %}
+                                        <a href="/f/show/{{m.playground.url_name}}"><img src="{% static 'img/football.jpg' %}" alt="{{m.playground.sport.en_name}}" class="photo"></a>
+                                    {% elif m.playground.sport.id == 2 %}
+                                        <a href="/f/show/{{m.playground.url_name}}"><img src="{% static 'img/volleyball.jpg' %}" alt="{{m.playground.sport.en_name}}" class="photo"></a>
+                                    {% else %}
+                                        <a href="/f/show/{{m.playground.url_name}}"><img src="{% static 'img/basketball.jpg' %}" alt="{{m.playground.sport.en_name}}" class="photo"></a>
+                                    {% endif %}
+                                {% endif %}
+                                <div class="field-info">
+                                    <h4>{{m.playground.name}}</h4>
+                                    <p><a href="{{m.playground.link}}">{{m.playground.address}}</a></p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                   </div>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endblock page_content %}
+

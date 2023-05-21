@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Главная</title>
+    <link href="{% static 'css/fields.css' %}" rel="stylesheet">
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+
+{% block page_content %}
+    <p>Какая-то информация о ресурсе.</p>
+    {% if instance %}
+        <div class="fields-container">
+            <h2>Рекомендованные площадки:</h2>
+        {% for i in instance %}
+            <div class="field-container">
+                {% if i.photo%}
+                    <a href="/f/show/{{i.url_name}}"><img src="{{i.photo.url}}" alt="Фото 1" class="photo"></a>
+                {% else %}
+                    {% if i.sport.id == 1 %}
+                        <a href="/f/show/{{i.url_name}}"><img src="{% static 'img/football.jpg' %}" alt="{{i.sport.en_name}}" class="photo"></a>
+                    {% elif i.sport.id == 2 %}
+                        <a href="/f/show/{{i.url_name}}"><img src="{% static 'img/volleyball.jpg' %}" alt="{{i.sport.en_name}}" class="photo"></a>
+                    {% else %}
+                        <a href="/f/show/{{i.url_name}}"><img src="{% static 'img/basketball.jpg' %}" alt="{{i.sport.en_name}}" class="photo"></a>
+                    {% endif %}
+                {% endif %}
+                <div class="field-info">
+                    <h4>{{i.name}}</h4>
+                    {% if i.price == True %}
+                        <p><i>Платная площадка</i></p>
+                    {% else %}
+                        <p><i>Бесплатная площадка</i></p>
+                    {% endif %}
+                    <p>{{i.field_info}}</p>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %} 
