@@ -9,6 +9,13 @@ def user_field_directory_path(instance, filename):
     return 'add/{0}/{1}'.format(instance.id, filename)
 
 
+# Города.
+class City(models.Model):
+    name = models.CharField(max_length=32)
+    en_name = models.CharField(max_length=32, null=True)
+    lat = models.FloatField(default=48.3139)
+    lng = models.FloatField(default=40.2688)
+
 # Станции метро.
 class Under(models.Model):
     group_id = models.IntegerField()
@@ -16,6 +23,7 @@ class Under(models.Model):
     en_name = models.CharField(max_length=32, null=True)
     lat = models.FloatField(default=48.3139)
     lng = models.FloatField(default=40.2688)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, default=1)
 
 # Виды спорта.
 class Sport(models.Model):
@@ -47,7 +55,6 @@ class AddPlayground(models.Model):
     field_info = models.CharField(max_length=128, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_add = models.DateField(auto_now_add=True)
-
 
 # Встречи.
 class Meeting(models.Model):
