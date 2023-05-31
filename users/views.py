@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import View
+from django.core.exceptions import PermissionDenied
 from .forms import LoginForm, RegForm, EditForm, CheckRegForm, ResendVC, DeleteAcc
 from .func import get_user, get_meetings, get_verification_email, get_date_in, get_admin
-from fields.func import get_recommended_fields
+from fields.func import get_recommended_fields, set_cookie_fields
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ def check_admin(func):
     def wrapper(self, request, *args, **kwargs):
         if get_admin(request.session.get('user_id')):
             return func(self, request, *args, **kwargs)
-        return HttpResponseRedirect('/')
+        raise PermissionDenied()
     return wrapper
 
 
@@ -66,9 +67,36 @@ class IndexView(View):
     @check_login
     def get(self, request, *args, **kwargs):
         if len(kwargs) >= 2:
-            flds = get_recommended_fields(kwargs['ses'])
-        flds = get_recommended_fields()
-        return render(request, self.template_name, {"url": kwargs['url'], "instance": flds})
+            try:
+                if request.COOKIES["auth"] == 'True':
+                    flds = get_recommended_fields(flds=request.COOKIES["flds"])
+                    response =  render(request, self.template_name, {"url": kwargs['url'], "instance": flds})
+                else:
+                    flds = get_recommended_fields(kwargs['ses'])
+                    response =  render(request, self.template_name, {"url": kwargs['url'], "instance": flds})
+                    response.set_cookie("auth", True)
+                    response.set_cookie("flds", set_cookie_fields(flds))
+            except:
+                flds = get_recommended_fields(kwargs['ses'])
+                response =  render(request, self.template_name, {"url": kwargs['url'], "instance": flds})
+                response.set_cookie("auth", True)
+                response.set_cookie("flds", set_cookie_fields(flds))
+        else:
+            try:
+                if request.COOKIES["auth"] == 'False':
+                    flds = get_recommended_fields(flds = request.COOKIES["flds"])
+                    response =  render(request, self.template_name, {"url": kwargs['url'], "instance": flds})
+                else:
+                    flds = get_recommended_fields()
+                    response =  render(request, self.template_name, {"url": kwargs['url'], "instance": flds})
+                    response.set_cookie("auth", False)
+                    response.set_cookie("flds", set_cookie_fields(flds))
+            except:
+                flds = get_recommended_fields()
+                response =  render(request, self.template_name, {"url": kwargs['url'], "instance": flds})
+                response.set_cookie("auth", False)
+                response.set_cookie("flds", set_cookie_fields(flds))
+        return response
     
 class LoginView(View):
     form_class = LoginForm

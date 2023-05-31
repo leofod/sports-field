@@ -1,11 +1,11 @@
-import random, smtplib, os
+import random, smtplib, os, hashlib
 from .models import User, Registration, Admin
 from fields.models import Meeting
 from fields.func import get_week
 from configparser import ConfigParser
 
 # Отпрака письма.
-def send_email(receiver, verification_code):
+def send_email(receiver, verification_code, name):
     base_path = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(base_path, "mail.ini")        
 
@@ -15,13 +15,49 @@ def send_email(receiver, verification_code):
     else:
         return False
     
-    charset = f'Content-Type: text/plain; charset=utf-8'
+    charset = f'Content-Type: text/html; charset=utf-8'
     mime = 'MIME-Version: 1.0'
-    subject = 'Проверочный код'
-    text = f"Проверочный код: {verification_code}"
+    subject = 'Подтверждение регистрации'    
+    html_content = """
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <tittle>Подтверждение регистрации</tittle>
+    </head>
+    <body>
+        <div style="max-width: 500px; margin: 0 auto; padding: 10px;">
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tr>
+                    <td style="text-align: center; border-bottom: #000 1px solid;"><h1 style="font-size: 24px;">Здравствуйте, <strong>""" + name + """</strong>.</h1></td>
+                </tr>
+            </table>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px">
+                <tr>
+                    <td style="text-align: center; font-family: 'Courier New';">Завершите регистрацию на SportsHub, введя код ниже:</td>
+                </tr>
+            </table>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tr>
+                    <td style="text-align: center; font-family: 'Courier New'; font-size: 30px; font-weight: 800;">""" + verification_code + """</td>
+                </tr>
+            </table>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="text-align: center; font-size: 14px; color: rgb(0, 0, 0, 0.5);">Физические упражнения могут заменить множество лекарств, но ни одно лекарство в мире не может заменить физические упражнения.</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-size: 14px; color: rgb(0, 0, 0, 0.5);">-Анжело Моссо</td>
+                </tr>
+
+            </table>
+        </div>
+    </body>
+    </html>
+    """
     
     body = "\r\n".join((f"From: {config.get('smtp', 'user')}", f"To: {receiver}", 
-            f"Subject: {subject}", mime, charset, "", text))
+            f"Subject: {subject}", mime, charset, "", html_content))
+    flag_return = True
 
     try:
         smtp = smtplib.SMTP(config.get("smtp", "server"), config.get("smtp", "port"))
@@ -30,10 +66,11 @@ def send_email(receiver, verification_code):
         smtp.login(config.get("smtp", "user"), config.get("smtp", "passwd"))
         smtp.sendmail(config.get("smtp", "user"), receiver, body.encode('utf-8'))
     except smtplib.SMTPException as err:
+        flag_return = False
         raise err
     finally:
         smtp.quit()
-    return True
+    return flag_return
 
 # Получить запись пользователя по логину/айди.
 def get_user(val, flag):
@@ -74,6 +111,13 @@ def get_verification_code():
             'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', '?', '@',\
             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '!', '.', '_']
     return ''.join(random.choices(chars, k=8))
+
+#  Возвращает хэш пароля.
+def get_hash(salt, password):
+    password = password.encode()
+    salt = salt.encode()
+    dk = hashlib.pbkdf2_hmac('sha256', password, salt, 100000)
+    return dk.hex()  
 
 # Генерация имени картинки.
 def get_image_name(name):

@@ -1,13 +1,11 @@
 from django import forms
-import re
+import re, logging
 from .models import User, Registration
 from django.forms import PasswordInput, Textarea
 from django.utils import timezone
-from .func import get_verification_code, send_email, get_image_name
+from .func import get_verification_code, send_email, get_image_name, get_hash
 from datetime import datetime, timedelta
 from hashlib import sha256
-import logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +29,7 @@ class LoginForm(forms.ModelForm):
             # return False, False
         try:
             u = User.objects.get(email = self['email'].data.lower())
-            if(self['password'].data == u.password):
+            if(get_hash(self['email'].data, self['password'].data)  == u.password):
                 return True, u.id
             else:
                 return True, False 
@@ -92,8 +90,10 @@ class ResendVC(forms.Form):
                 diff_time = curr_time - reg_info.time_add
                 if (diff_time > timedelta(minutes=5)):
                     reg_info.time_add = datetime.strftime(curr_time, '%Y-%m-%d %H:%M:%S%z')
-                    reg_info.verification_code = get_verification_code()
+                    reg_info.verification_code = get_verification_code()                    
                     reg_info.save()
+                    if not send_email(reg_info.email, reg_info.verification_code, reg_info.name, False):
+                        logger.error('Can\'t resend email to: ' + reg_info.email)
                     return True, True
             # acc.time_add = datetime.strftime(datetime.now(tz = timezone.get_current_timezone()), '%Y-%m-%d %H:%M:%S%z')
                 return True, str(datetime.strftime(curr_time+timedelta(minutes=5)-diff_time, '%H:%M:%S'))
@@ -129,9 +129,9 @@ class RegForm(forms.ModelForm):
                     return False, 2
                 except Registration.DoesNotExist:
                     username = self['username'].data.lower()
-        if not(re.match(r'^[a-zA-Zа-яА-ЯЁ][a-zа-яё]{1,30}$', self['name'].data)):
+        if not(re.match(r'^[a-zA-Zа-яА-ЯЁ][a-zа-яё]{1,31}$', self['name'].data)):
             return False, 3
-        if not(re.match(r'^[a-zA-Zа-яА-ЯЁ][a-zA-Zа-яА-ЯЁ\s\-]{1,30}$', self['surname'].data)):
+        if not(re.match(r'^[a-zA-Zа-яА-ЯЁ][a-zA-Zа-яА-ЯЁ\s\-]{1,31}$', self['surname'].data)):
             return False, 4
         if re.match(r'^([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)$', self['email'].data):
             try:
@@ -150,12 +150,13 @@ class RegForm(forms.ModelForm):
             return False, 6
         if self['password'].data != self['password_repeat'].data:
             return False, 7
-        acc = Registration(username = username, name = self['name'].data, surname = self['surname'].data, email = email, password = self['password'].data)
+        acc = Registration(username = username, name = self['name'].data, surname = self['surname'].data, email = email, password = get_hash(email, self['password'].data))
         acc.verification_code = get_verification_code()
         acc.time_add = datetime.strftime(datetime.now(tz = timezone.get_current_timezone()), '%Y-%m-%d %H:%M:%S%z')
         try:                
             acc.save()
-            # print("SEND EMAIL", send_email(acc.email, acc.verification_code))
+            if not send_email(acc.email, acc.verification_code, acc.name, True):
+                logger.error('Can\'t send email to: ' + acc.email)
         except Exception as e:
             logger.error('Can\'t save reg: ' + username)
             return True, False
@@ -191,7 +192,11 @@ class EditForm(forms.ModelForm):
                     User.objects.get(username = self['username'].data.lower())
                     return False, 2
                 except User.DoesNotExist:
-                    current_user.username = username
+                    try:
+                        Registration.objects.get(username = self['username'].data.lower())
+                        return False, 2
+                    except Registration.DoesNotExist:
+                        current_user.username = username
         if current_user.name != self['name'].data:
             if not(re.match(r'^[a-zA-Zа-яА-ЯЁ][a-zа-яё]{1,30}$', self['name'].data)):
                 return False, 3
