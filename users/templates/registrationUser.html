@@ -9,7 +9,7 @@
 {% endblock %}
 {% block page_content %}
 <div class="form-box">
-    <h2>Авторизация</h2>
+    <h2>Регистрация</h2>
     {% if error %}
         <div class="notice-box">
             {% if error == 1 %}
@@ -67,7 +67,7 @@
             {% if form.password_repeat.data|length != 0 %} value="{{form.password_repeat.data}}" {% endif%}>
             <label>{{form.password_repeat.label}}</label>
         </div>
-      <input type="submit" class="submit_form" value="Войти">
+      <input type="submit" class="submit_form" value="Зарегистрироваться">
     </form>
   </div>
 {% endblock page_content %}
