@@ -3,7 +3,7 @@ from users.models import User
 from django.contrib.postgres.fields import ArrayField
 
 def field_directory_path(instance, filename):
-    return 'fields/{0}/{1}'.format(instance.id, filename)
+    return 'fields/{0}/{1}'.format(instance.url_name, filename)
 
 def user_field_directory_path(instance, filename):
     return 'add/{0}/{1}'.format(instance.id, filename)

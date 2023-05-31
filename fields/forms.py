@@ -35,7 +35,7 @@ class AddPlaygroundAdminForm(forms.ModelForm):
             'price': TextInput(),
         }
 
-    def uploadPlayground(self, pid, f = None):
+    def upload_playground(self, pid, f = None):
         p = Playground()
         if not(self['name'].data):
             return False, 1
@@ -81,10 +81,11 @@ class AddPlaygroundAdminForm(forms.ModelForm):
         else:
             if pid:
                 pi = Playground.objects.latest('id')
-                if pi.photo:
-                    move_image(pid, pi)
+                pa = AddPlayground.objects.get(pk=pid)
+                if pa.photo:
+                    move_image(pa, pi)
                 else:
-                    AddPlayground.objects.get(pk=pid).delete()
+                    pa.delete()
         if pid:
             logger.info(f"DT - {pid}")
         return True, True
@@ -95,18 +96,18 @@ class AddPlaygroundForm(forms.ModelForm):
         model = AddPlayground
         fields = ['sport', 'name', 'address', 'photo', 'price', 'field_info']
         labels = {
-            'sport': 'Вид спорта',
-            'name': 'Навзвание',
-            'address': 'Адрес или ссылка',
+            'sport': 'Вид спорта (*)',
+            'name': 'Навзвание (*)',
+            'address': 'Адрес или ссылка (*)',
             'photo': 'Фото',
-            'price': 'Тип площадки',
+            'price': 'Тип площадки (*)',
             'field_info': 'Описание',
         }
         widgets = {
             'price': TextInput(),
         }
 
-    def uploadPlayground(self, uid, f = None):
+    def upload_playground(self, uid, f = None):
         if not(self['sport'].data):
             return False, 1
         if not(self['address'].data):
@@ -143,7 +144,7 @@ class ShowPlaygroundForm(forms.ModelForm):
             'price': TextInput(),
         }
 
-    def getCrit(sport, price, under):
+    def get_crit(sport, price, under):
         try:
             sp = Sport.objects.get(en_name = sport).id
         except Sport.DoesNotExist:
@@ -162,14 +163,14 @@ class ShowPlaygroundForm(forms.ModelForm):
             return False
         return [sp, pr, un]
     
-    def makeGroupList(self, seed, flag_add):
+    def make_group_list(self, seed, flag_add):
         if flag_add:
             return [seed-2, seed+2, seed-52, seed-48, seed-101, seed-100, seed-99, seed-150, seed-3, \
                     seed+48, seed+52, seed+99, seed+100, seed+101, seed+150, seed+3]
         return [seed, seed-1, seed+1, seed-50, seed-51, seed-49, seed+49, seed+50, seed+51]
 
     
-    def getListPlaygrounds(self, flag_map, sport, price=None, un=None):
+    def get_list_playground(self, flag_map, sport, price=None, un=None):
         if un is None:
             price = self['price'].data
             under = Under.objects.get(name = self['group_id'].data)
@@ -177,17 +178,17 @@ class ShowPlaygroundForm(forms.ModelForm):
             under = Under.objects.get(name = un)
         ret_url_arr = [under.en_name]
         if price is not None:        
-            ret_arr = Playground.objects.filter(group_id__in = self.makeGroupList(under.group_id, False)).filter(sport = sport).filter(price = price)[:15]
+            ret_arr = Playground.objects.filter(group_id__in = self.make_group_list(under.group_id, False)).filter(sport = sport).filter(price = price)[:15]
             if ret_arr.count() < 10:
-                ret_arr |= Playground.objects.filter(group_id__in = self.makeGroupList(under.group_id, True)).filter(sport = sport).filter(price = price)[:(15-ret_arr.count())]
+                ret_arr |= Playground.objects.filter(group_id__in = self.make_group_list(under.group_id, True)).filter(sport = sport).filter(price = price)[:(15-ret_arr.count())]
             if price == '1':
                 ret_url_arr.append('paid')
             else:
                 ret_url_arr.append('free')
         else:
-            ret_arr = Playground.objects.filter(group_id__in = self.makeGroupList(under.group_id, False)).filter(sport = sport)[:15]
+            ret_arr = Playground.objects.filter(group_id__in = self.make_group_list(under.group_id, False)).filter(sport = sport)[:15]
             if ret_arr.count() < 10:
-                ret_arr |= Playground.objects.filter(group_id__in = self.makeGroupList(under.group_id, True)).filter(sport = sport)[:(15-ret_arr.count())]
+                ret_arr |= Playground.objects.filter(group_id__in = self.make_group_list(under.group_id, True)).filter(sport = sport)[:(15-ret_arr.count())]
             ret_url_arr.append('all')
         if ret_arr:
             if flag_map:
@@ -215,25 +216,7 @@ class ShowPlaygroundMeetingForm(forms.ModelForm):
         model = Meeting
         fields = ['date_meet']
 
-    def getPlayground(uname):
-        try:
-            return Playground.objects.get(url_name = uname)
-        except Playground.DoesNotExist:
-            return
-    
-    def getMembers(f):
-        w = get_week(False)
-        meeting = Meeting.objects.filter(playground = f).filter(date_meet__in = w)
-        if meeting.count() == 0:
-            return 0
-        return_str = [[0] * 3 for i in range(meeting.count())]
-        for i, m in enumerate(meeting):
-            return_str[i][0] = m.date_meet.strftime("%Y-%m-%d")
-            return_str[i][1] = m.user.name + " " + m.user.surname
-            return_str[i][2] = m.user.username
-        return return_str
-
-    def signUpMeeting(self, fname, uid):
+    def sign_up_meeting(self, fname, uid):
         if self['date_meet'].data not in get_week(False):
             return False, False, False
         f = Playground.objects.get(url_name = fname)
@@ -257,7 +240,7 @@ class RatePlaygroundForm(forms.ModelForm):
         model = Rating
         fields = ['mark']
 
-    def ratePlayground(self, fname, uid):
+    def rate_playground(self, fname, uid):
         if self['mark'].data and re.match(r'^\d{1}$', self['mark'].data) and int(self['mark'].data) >= 1 and int(self['mark'].data) <= 5:
             f = Playground.objects.get(url_name = fname)
             u = User.objects.get(pk = uid)

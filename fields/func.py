@@ -1,3 +1,4 @@
+import time
 from .models import Sport, Under, Playground, Meeting, Rating, Visit, AvgRating, FavoritePlaygrounds, AddPlayground
 from users.models import User
 from django.db.models import Count, Sum
@@ -27,17 +28,16 @@ def get_one_added_playground(pid):
         return False
     
 # Копирование фотографии из /add/ в /fields/. 
-def move_image(from_pid, to_p):
-    p = AddPlayground.objects.get(pk=from_pid)
-    path_from = os.path.join(settings.MEDIA_ROOT, p.photo.name)
-    path_to = os.path.join(str(settings.MEDIA_ROOT), 'fields/', str(to_p.id))
+def move_image(from_p, to_p):
+    path_from = os.path.join(settings.MEDIA_ROOT, from_p.photo.name)
+    path_to = os.path.join(str(settings.MEDIA_ROOT), 'fields/', str(to_p.url_name))
     os.mkdir(path_to, mode=0o775)
     shutil.copy(path_from, path_to)
-    to_p.photo = 'fields/{0}{1}'.format(to_p.id, path_from[path_from.rindex('/'):])
+    to_p.photo = 'fields/{0}{1}'.format(to_p.url_name, path_from[path_from.rindex('/'):])
     to_p.save()
-    p.photo.delete()
+    from_p.photo.delete()
     os.rmdir(path_from[:path_from.rindex('/')])
-    p.delete()
+    from_p.delete()
     return True
 
 # Генерация имени картинки.
@@ -96,7 +96,10 @@ def fill_visited_fields():
     return
 
 # Рекомендованные площадки.
-def get_recommended_fields(uid=None):
+def get_recommended_fields(uid=None, flds=None):
+    if flds:
+        flds_arr = flds.split()
+        return Playground.objects.filter(url_name__in=flds_arr)[:20]
     if uid: 
         try:
             v = Visit.objects.get(user = uid)
@@ -104,6 +107,13 @@ def get_recommended_fields(uid=None):
         except Visit.DoesNotExist:
             return Playground.objects.all().order_by('-grade')[:20]
     return Playground.objects.all()[:20]
+
+# Возвращает список url_name площадок.
+def set_cookie_fields(arr):
+    ret_str = ''
+    for i in arr:
+        ret_str += ' ' + (i.url_name)
+    return ret_str
 
 # Для каждой площадки подсчитывается сумма и количество оценок.
 def fill_avg_mark():
@@ -176,7 +186,7 @@ def fill_raitings():
                 r.user = i
                 r.date_mark = today
                 r.save()
-
+    return
 
 # Получить название всех станций метро.
 def get_under():
