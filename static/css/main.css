@@ -3,24 +3,29 @@
     margin: 0;
     font-family: 'segoe ui';
     min-height: 100vh;
-    background-color: #70ABBF;
+    background-color: #f5d3e7;
 }
 
 #page-container{
     width: 1400px;
     margin: 0 auto;
-    background-color: #327496;
-    min-height: calc(100vh - 150px);
+    background-color: #c7d8e1;
+    min-height: calc(100vh - 153px);
     padding: 40px 20px;
+}
+
+#page-container{
+    font-size: 18px;
 }
 
 .navbar {
     min-width: 1400px;
     padding: 0 20px;
-    background-color: #C4BEB5;
+    background-color: #e4d6c2;
     height: 70px;
     display: flex;
     justify-content: space-between;
+    border-bottom: 3px solid #fff1b2;
 }
 
 .navbar-logo img{

@@ -3,7 +3,11 @@
     padding: 20px;
     margin-top: 40px;
     flex-wrap: wrap;
-    background-color: #495C69;
+    background-color: #c3c3f3;
+    border-radius: 35px;
+    background-image: radial-gradient(#c3c3f3, #aaaaf3);
+    /* background-image: radial-gradient(#c3c3f3, #8181e6); */
+
 }
 
 .fields-container h2{
@@ -40,6 +44,7 @@
     width: 400px;
     height: 300px;
     filter: blur(1px);
+    filter: grayscale(50%);
 }
 
 
@@ -48,25 +53,27 @@
     /* width: 400px; */
     background-color: #f2f2f2;
     filter: blur(0px);
+    filter: grayscale(0);
 }
 
 .field-info {
     height: 100px;
     display: none;
     width: 100%;
-    background: rgb(183 193 199 / 50%);
+    background: rgba(215, 139, 189, 0.5);
     padding: 10px;
     box-sizing: border-box;
     text-align: center;
 }
 
 .field-info h4{
-    font-size: 22px;
+    font-size: 18px;
     margin-top: 0;
     margin-bottom: 5px;
 }
 
 .field-info p{
+    font-size: 16px;
     margin-top: 0;
     margin-bottom: 5px;
 }

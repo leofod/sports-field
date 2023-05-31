@@ -3,8 +3,8 @@
     min-height: 200px;
     display: flex;
     align-items: center;
-    margin: 10px;
-    background-color: #52756F;
+    margin: 10px 10px 30px 10px;
+    background-color: rgba(100, 42, 73, 0.2);
     border: 1px solid #52756F;
     border-radius: 5px;
     border-top-left-radius: 100px;
@@ -30,6 +30,11 @@
     margin-right: 10px;
 }
 
+.playground-photo img{
+  width: 100%;
+  height: 100%;
+}
+
 .playground-info {
     display: flex;
     flex-direction: column;
@@ -41,7 +46,7 @@
 
 .favor input[type=submit]{
   align-items: center;
-  background-color: #eff458;
+  background-color: #fbff96;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: .25rem;
   box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
@@ -56,7 +61,7 @@
   line-height: 1.25;
   min-height: 3rem;
   padding: calc(.875rem - 1px) calc(1.5rem - 1px);
-  margin-left: 20px;
+  margin-left: 210px;
   position: relative;
   text-decoration: none;
   transition: all 250ms;
@@ -91,9 +96,9 @@
 }
 
 .members-field{
-  background-color: #52756F;
+  background-color: rgba(203, 132, 132, 0.5);
   border: 2px solid rgba(0, 0, 0, 0.1);
-  margin: 10px 0 0 20px;
+  margin: 10px 0 0 210px;
   padding: 5px 10px;
 }
 
@@ -105,7 +110,7 @@
   margin-bottom: 7px;
   border: 0px solid rgba(0, 0, 0, 0.1);
   text-decoration: underline;
-  background-color: #52756F;
+  background-color: rgba(203, 132, 132, 0.000001);
   text-align: left;
   padding-left: 0;
 }
@@ -126,7 +131,7 @@
 
 .signUp-b{
   margin-top: 5px;
-  width: 60px;
+  width: 65px;
 	height: 25px;
 	border-radius: 2px;
   color: black;
@@ -134,11 +139,11 @@
 }
 
 .signUp-b-in{
-  background-color: #059e30;
+  background-color: rgba(17, 255, 0, 0.3);
 }
 
 .signUp-b-out{
-  background-color: #bc4626;
+  background-color: rgba(255, 0, 0, 0.3);
 }
 
 
@@ -153,7 +158,7 @@
 }
 
 #rating-area{
-  margin: 10px 20px;
+  margin: 10px 20px 10px 210px;
   padding: 0;
   width: 250px;
 }
@@ -166,21 +171,21 @@
 	width: 130px;
 	height: 36px;
 	margin: 10px 60px;
-  background-color: #52756F;
+  background-color: #c4f4ec;
 	border-radius: 2px;
   color: black;
   text-align: center;
-	padding: 10px;
+	padding: 6px;
   font-size: 16px;
 }
 
 #add-raiting input[type=submit]:hover {
-    font-size: 12px;
     box-shadow: 0 0 1px #000,
     0 0 5px #000,
     0 0 10px #000,
     0 0 20px #000;
-}
+    background-color: #aadad2;
+  }
 
 #add-raiting:not(:checked) > label {
   margin-right: 5px;
@@ -190,7 +195,7 @@
 	cursor: pointer;
 	font-size: 32px;
 	line-height: 32px;
-	color: lightgrey;
+	color: rgb(25, 21, 21, 0.3);
 	text-shadow: 1px 1px #bbb;
 }
 
@@ -222,9 +227,10 @@
 }
 
 #rating-result {
-	width: 220px;
+  font-style: italic;
+	width: 230px;
 	height: 60px;
-	margin: 10px 0 10px 20px;
+	margin: 10px 0 10px 210px;
 }
 
 #rating-result p{
