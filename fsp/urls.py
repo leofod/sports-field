@@ -8,5 +8,9 @@ urlpatterns = [
     path('f/', include("fields.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+handler404 = 'fsp.views.handler404'
+handler403 = 'fsp.views.handler403'
+handler500 = 'fsp.views.handler500'
+
 if settings.DEBUG:
-        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

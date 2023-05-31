@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head_content%}
+    <title>Страница не найдена</title>
+    <style>
+        .notif-container { max-width: 800px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); text-align: center; }
+        h1 { font-size: 36px; margin-bottom: 20px }
+        p { font-size: 20px; line-height: 1.5; margin-bottom: 10px; }
+        .stop-img{ width: 200px; height: 200px; }
+        .back-link { display: block; margin-top: 20px; color: #333; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+{% endblock %}
+{% block nav_content %}
+    {% include url%}
+{% endblock %}
+{% block page_content %}
+    <div class="notif-container">
+        <h1>Ошибка 404: Страница не найдена</h1>
+        <p>К сожалению, запрошенная вами страница не существует.</p>
+        <img src="{% static 'img/404.png' %}" class="stop-img" alt="403">
+        <p>Проверьте правильность URL или перейдите на другую страницу.</p>
+        <a href="/" class="back-link">Вернуться на главную страницу</a>
+    </div>
+{% endblock %}
